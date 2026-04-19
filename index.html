@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>AI Homework Helper</title>
+</head>
+
+<body>
+
+<h1>AI Homework Explainer</h1>
+
+<textarea id="question" rows="6" cols="50" placeholder="Paste your question here"></textarea>
+
+<br><br>
+
+<button onclick="sendQuestion()">Explain</button>
+
+<p id="result"></p>
+
+<script>
+// When this page is opened as a file, relative URLs like "/explain" break (they point at the file
+// origin, not your API). When served from the Node app, use the same host/port as the page.
+const API_BASE = (() => {
+  const loc = window.location;
+  if (loc.protocol === "file:" || !loc.hostname) {
+    return "http://localhost:3000";
+  }
+  return `${loc.protocol}//${loc.host}`;
+})();
+
+async function sendQuestion() {
+  const out = document.getElementById("result");
+  const question = document.getElementById("question").value.trim();
+
+  if (!question) {
+    out.innerText = "Please enter a question.";
+    return;
+  }
+
+  out.innerText = "Thinking…";
+
+  try {
+    const response = await fetch(`${API_BASE}/explain`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question }),
+    });
+
+    const text = await response.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      out.innerText = "Server returned invalid JSON. Is the API running?";
+      return;
+    }
+
+    if (!response.ok) {
+      out.innerText = data.explanation || `Request failed (${response.status}).`;
+      return;
+    }
+
+    out.innerText = data.explanation ?? "No explanation in response.";
+  } catch (e) {
+    out.innerText =
+      `Could not reach the server (${e && e.message ? e.message : "unknown error"}). ` +
+      `Make sure \"npm start\" is running, then open http://localhost:3000 (or keep using this page — requests go to ${API_BASE}).`;
+  }
+}
+
+</script>
+
+</body>
+</html>
