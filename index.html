@@ -3,19 +3,230 @@
 
 <head>
 <title>AI Homework Helper</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root {
+    --bg: #0f1712;
+    --bg-highlight: #1f2d23;
+    --panel: #17231c;
+    --panel-2: #1d2c22;
+    --text: #e8f3e9;
+    --muted: #b9c9b8;
+    --accent: #8ba764;
+    --accent-2: #a7c27d;
+    --border: #314436;
+    --ok: #b8df8f;
+    --secondary: #2d3f2f;
+  }
+
+  body.light {
+    --bg: #eef4ea;
+    --bg-highlight: #dbe8d1;
+    --panel: #ffffff;
+    --panel-2: #f4f8f0;
+    --text: #1e2b1e;
+    --muted: #50624f;
+    --accent: #6d8c49;
+    --accent-2: #88a960;
+    --border: #c8d7bf;
+    --ok: #3f6f30;
+    --secondary: #dfead8;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: radial-gradient(circle at 20% 0%, var(--bg-highlight) 0%, var(--bg) 55%);
+    color: var(--text);
+    display: grid;
+    place-items: center;
+    padding: 20px;
+  }
+
+  .card {
+    width: min(860px, 100%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  }
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: clamp(1.4rem, 1rem + 1.2vw, 2rem);
+    letter-spacing: 0.2px;
+  }
+
+  .subtitle {
+    margin: 0 0 16px;
+    color: var(--muted);
+    font-size: 0.96rem;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .theme-toggle {
+    border: 1px solid var(--border);
+    background: var(--secondary);
+    color: var(--text);
+    font-size: 0.84rem;
+    font-weight: 600;
+    padding: 7px 10px;
+    border-radius: 999px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 170px;
+    resize: vertical;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+    padding: 12px 14px;
+    font-size: 1rem;
+    line-height: 1.5;
+    outline: none;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+
+  textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(167, 194, 125, 0.28);
+  }
+
+  .actions {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  button {
+    appearance: none;
+    border: 0;
+    border-radius: 10px;
+    background: linear-gradient(180deg, var(--accent-2), var(--accent));
+    color: #1f2c1d;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: transform 80ms ease, filter 120ms ease;
+  }
+
+  button:hover {
+    filter: brightness(1.06);
+  }
+
+  button:active {
+    transform: translateY(1px);
+  }
+
+  button:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  .result {
+    margin-top: 16px;
+    min-height: 92px;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    padding: 14px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .result-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .secondary-btn {
+    background: var(--secondary);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .secondary-btn:disabled {
+    opacity: 0.6;
+  }
+
+  .hint {
+    margin-top: 10px;
+    color: var(--ok);
+    font-size: 0.88rem;
+  }
+
+  .spinner {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #20311f;
+    display: none;
+    animation: spin 0.9s linear infinite;
+  }
+
+  .loading .spinner {
+    display: inline-block;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>
 </head>
 
 <body>
 
+<main class="card">
+<div class="topbar">
 <h1>AI Homework Explainer</h1>
+<button id="themeBtn" class="theme-toggle" type="button" onclick="toggleTheme()">Switch to Light</button>
+</div>
+<p class="subtitle">Paste your homework question and get a simple step-by-step explanation.</p>
 
+<label for="question">Your question</label>
 <textarea id="question" rows="6" cols="50" placeholder="Paste your question here"></textarea>
 
-<br><br>
+<div class="actions">
+  <button id="explainBtn" onclick="sendQuestion()">
+    <span class="spinner" aria-hidden="true"></span>
+    <span id="explainText">Explain</span>
+  </button>
+</div>
 
-<button onclick="sendQuestion()">Explain</button>
+<p id="result" class="result">Your explanation will appear here.</p>
+<div class="result-actions">
+  <button id="copyBtn" class="secondary-btn" type="button" onclick="copyAnswer()">Copy answer</button>
+</div>
+<p class="hint">Tip: more context usually gives better explanations.</p>
+</main>
 
-<p id="result"></p>
 
 <script>
 // When this page is opened as a file, relative URLs like "/explain" break (they point at the file
@@ -27,16 +238,65 @@ const API_BASE = (() => {
   }
   return `${loc.protocol}//${loc.host}`;
 })();
+const THEME_KEY = "ai-homework-theme";
+const questionEl = document.getElementById("question");
+const resultEl = document.getElementById("result");
+const explainBtn = document.getElementById("explainBtn");
+const explainText = document.getElementById("explainText");
+const copyBtn = document.getElementById("copyBtn");
+const themeBtn = document.getElementById("themeBtn");
+
+function applySavedTheme() {
+  const saved = localStorage.getItem(THEME_KEY);
+  if (saved === "light") {
+    document.body.classList.add("light");
+    themeBtn.innerText = "Switch to Dark";
+  } else {
+    document.body.classList.remove("light");
+    themeBtn.innerText = "Switch to Light";
+  }
+}
+
+function toggleTheme() {
+  const isLight = document.body.classList.toggle("light");
+  localStorage.setItem(THEME_KEY, isLight ? "light" : "dark");
+  themeBtn.innerText = isLight ? "Switch to Dark" : "Switch to Light";
+}
+
+function setLoading(isLoading) {
+  explainBtn.disabled = isLoading;
+  explainBtn.classList.toggle("loading", isLoading);
+  explainText.innerText = isLoading ? "Thinking..." : "Explain";
+}
+
+async function copyAnswer() {
+  const text = resultEl.innerText.trim();
+  if (!text || text === "Your explanation will appear here.") return;
+
+  try {
+    await navigator.clipboard.writeText(text);
+    copyBtn.innerText = "Copied!";
+    setTimeout(() => {
+      copyBtn.innerText = "Copy answer";
+    }, 1200);
+  } catch {
+    copyBtn.innerText = "Copy failed";
+    setTimeout(() => {
+      copyBtn.innerText = "Copy answer";
+    }, 1200);
+  }
+}
 
 async function sendQuestion() {
-  const out = document.getElementById("result");
-  const question = document.getElementById("question").value.trim();
+  const out = resultEl;
+  const question = questionEl.value.trim();
 
   if (!question) {
     out.innerText = "Please enter a question.";
     return;
   }
 
+  setLoading(true);
   out.innerText = "Thinking…";
 
   try {
@@ -65,8 +325,19 @@ async function sendQuestion() {
     out.innerText =
       `Could not reach the server (${e && e.message ? e.message : "unknown error"}). ` +
       `Make sure \"npm start\" is running, then open http://localhost:3000 (or keep using this page — requests go to ${API_BASE}).`;
+  } finally {
+    setLoading(false);
   }
 }
+
+questionEl.addEventListener("keydown", (event) => {
+  if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+    event.preventDefault();
+    sendQuestion();
+  }
+});
+
+applySavedTheme();
 
 </script>
 
