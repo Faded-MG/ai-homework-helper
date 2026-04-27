@@ -1,0 +1,27 @@
+.result {
+  margin-top: 16px;
+  min-height: 92px;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  padding: 14px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+}
+
+.result-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.secondary-btn {
+  background: var(--secondary);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.secondary-btn:disabled {
+  opacity: 0.6;
+}

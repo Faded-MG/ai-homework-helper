@@ -1,0 +1,15 @@
+.theme-toggle {
+  border: 1px solid var(--border);
+  background: var(--secondary);
+  color: var(--text);
+  font-size: 0.84rem;
+  font-weight: 600;
+  padding: 7px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+  filter: brightness(1.1);
+}
