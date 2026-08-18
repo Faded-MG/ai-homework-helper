@@ -4,12 +4,12 @@
   "description": "AI Homework Helper - React App",
   "type": "module",
   "scripts": {
-    "start": "node server.js",
+    "start": "node server.cjs",
     "dev": "npm run dev:react",
     "dev:react": "webpack serve --open",
-    "dev:server": "node server.js",
+    "dev:server": "node server.cjs",
     "build": "webpack --mode production",
-    "preview": "node server.js",
+    "preview": "node server.cjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -3,6 +3,7 @@ const path = require('path');
 module.exports = {
   entry: './src/main.tsx',
   mode: 'development',
+
   module: {
     rules: [
       {
@@ -16,24 +17,29 @@ module.exports = {
       },
     ],
   },
+
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
+
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
+
   devServer: {
-    static: {
-      directory: path.join(__dirname, 'dist'),
-    },
-    compress: true,
-    port: 5173,
-    proxy: {
-      '/explain': {
-        target: 'http://localhost:3000',
-        changeOrigin: true
-      }
-    }
+  static: {
+    directory: path.join(__dirname, 'dist'),
   },
+  compress: true,
+  port: 5173,
+  proxy: [
+    {
+      context: ['/explain'],
+      target: 'http://localhost:3000',
+      changeOrigin: true,
+    },
+  ],
+},
 };
+
