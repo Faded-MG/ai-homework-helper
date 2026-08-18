@@ -10,6 +10,8 @@
   --border: #314436;
   --ok: #b8df8f;
   --secondary: #2d3f2f;
+  --success: #4ade80;
+  --success-light: rgba(74, 222, 128, 0.15);
 }
 
 body.light {
@@ -24,6 +26,8 @@ body.light {
   --border: #c8d7bf;
   --ok: #3f6f30;
   --secondary: #dfead8;
+  --success: #22c55e;
+  --success-light: rgba(34, 197, 94, 0.1);
 }
 
 * {
@@ -39,9 +43,28 @@ body {
   display: grid;
   place-items: center;
   padding: 20px;
+  transition: background-color 300ms ease, color 300ms ease;
 }
 
 #root {
   width: 100%;
   max-width: min(860px, 100%);
+  animation: fadeIn 400ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

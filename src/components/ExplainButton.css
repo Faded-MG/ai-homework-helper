@@ -1,25 +1,39 @@
 button {
   appearance: none;
   border: 0;
-  border-radius: 10px;
-  background: linear-gradient(180deg, var(--accent-2), var(--accent));
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
   color: #1f2c1d;
   font-weight: 700;
-  font-size: 0.95rem;
-  padding: 10px 16px;
+  font-size: 0.96rem;
+  padding: 12px 24px;
   cursor: pointer;
-  transition: transform 80ms ease, filter 120ms ease;
+  transition: all 180ms ease;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  opacity: 0;
+  transition: opacity 180ms ease;
 }
 
 button:hover:not(:disabled) {
-  filter: brightness(1.06);
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(139, 167, 100, 0.3);
 }
 
 button:active:not(:disabled) {
-  transform: translateY(1px);
+  transform: translateY(0);
 }
 
 button:disabled {
@@ -28,13 +42,13 @@ button:disabled {
 }
 
 .spinner {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2.5px solid rgba(255, 255, 255, 0.25);
   border-top-color: #20311f;
   display: none;
-  animation: spin 0.9s linear infinite;
+  animation: spin 0.8s linear infinite;
 }
 
 .loading .spinner {
