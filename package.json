@@ -8,7 +8,7 @@
     "dev": "npm run dev:react",
     "dev:react": "webpack serve --open",
     "dev:server": "node server.js",
-    "build": "tsc && webpack --mode production",
+    "build": "webpack --mode production",
     "preview": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
